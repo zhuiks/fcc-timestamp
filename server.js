@@ -4,6 +4,7 @@
 // init project
 var express = require('express');
 var app = express();
+var getTimestamp = require('./gettimestamp.js').getTimestamp;
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
@@ -24,7 +25,9 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-
+app.get("/api/timestamp/:date?", function (req, res) {
+  res.json(getTimestamp(req.params.date));
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
