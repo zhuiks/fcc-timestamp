@@ -6,6 +6,11 @@ var express = require('express');
 var app = express();
 var getTimestamp = require('./gettimestamp.js').getTimestamp;
 
+app.use((req, res, next) => {
+  console.log(`${req.method}: ${req.originalUrl}`);
+  next();
+});
+
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
 var cors = require('cors');
@@ -17,12 +22,6 @@ app.use(express.static('public'));
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
-});
-
-
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
 });
 
 app.get("/api/timestamp/:date?", function (req, res) {
