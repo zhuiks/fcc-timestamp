@@ -6,8 +6,6 @@ var express = require('express');
 var app = express();
 var api = require('./index.js');
 
-app.use('/api',  api);
-
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
 var cors = require('cors');
@@ -20,6 +18,8 @@ app.use(express.static('public'));
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
+
+app.use('/api',  api);
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
