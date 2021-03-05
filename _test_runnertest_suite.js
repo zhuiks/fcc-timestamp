@@ -1,5 +1,5 @@
 const index = require('./index.js');
-const getTimestamp = require('./gettimestamp.js').getTimestamp;
+const getTimestamp = require('./api/timestamp.js').getTimestamp;
 
 
 describe("UnitTests", function() {

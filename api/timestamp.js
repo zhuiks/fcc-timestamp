@@ -13,6 +13,7 @@ getTimestamp = (req) => {
   };
 }
 
-module.exports = (req, res) => {
+module.exports.getTimestamp = getTimestamp;
+module.exports.middleware = (req, res) => {
     res.json(getTimestamp(req.params.date));
 }

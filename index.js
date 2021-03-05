@@ -6,7 +6,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const timestamp = require('./api/timestamp');
+const timestamp = require('./api/timestamp').middleware;
 app.use('/timestamp/:date?', timestamp);
 
 module.exports = app;
