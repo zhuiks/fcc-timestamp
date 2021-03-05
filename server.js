@@ -1,22 +1,20 @@
-// server.js
-// where your node app starts
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const api = require('./index.js');
 
-// init project
-var express = require('express');
-var app = express();
-var api = require('./index.js');
+const app = express();
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
-var cors = require('cors');
 app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
 
 // http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
+app.use(express.static(process.cwd() + '/public'));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + '/views/index.html');
+  res.sendFile(process.cwd() + '/views/index.html');
 });
 
 app.use('/api',  api);

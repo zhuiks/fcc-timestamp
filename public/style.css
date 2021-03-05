@@ -9,7 +9,7 @@ body {
 	line-height: 1.4em;
 }
 
-.container {
+section {
 	padding: 0;
 	margin-top: 40px;
 }
@@ -22,7 +22,7 @@ hr {
 	margin: 25px;
 }
 
-.footer {
+footer {
 	margin-top: 40px;
 }
 
