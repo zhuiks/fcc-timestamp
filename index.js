@@ -15,4 +15,7 @@ app.use('/whoami', whoami);
 const shorturl = require('./api/shorturl').middleware;
 app.use('/shorturl', shorturl);
 
+const exercise = require('./api/exercise').middleware;
+app.use('/exercise', exercise);
+
 module.exports = app;
