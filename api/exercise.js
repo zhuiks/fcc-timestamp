@@ -67,5 +67,20 @@ app.post('/add', async (req, res) => {
   }
 });
 
+app.get('/log', async (req, res) => {
+  try {
+    console.log(req.query);
+    await connectDb();
+    const user = await ExerciseLog.findById(req.query.userId);
+    res.json({
+      _id: user._id,
+      username: user.username,
+      count: user.log.length,
+      log: user.log,
+    })
+  } catch(err) {
+    res.json({error: err.message})
+  }
+})
 
 exports.middleware = app;
