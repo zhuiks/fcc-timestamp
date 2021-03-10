@@ -18,4 +18,7 @@ app.use('/shorturl', shorturl);
 const exercise = require('./api/exercise').middleware;
 app.use('/exercise', exercise);
 
+const fileanalyse = require('./api/fileanalyse.js').middleware;
+app.use('/fileanalyse', fileanalyse);
+
 module.exports = app;
