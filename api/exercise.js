@@ -48,7 +48,6 @@ app.get('/users', async (req, res) => {
 
 app.post('/add', async (req, res) => {
   try {
-    console.log(req.body.date);
     await connectDb();
       const user = await ExerciseLog.findById(  req.body.userId);
       const exercise = {
@@ -71,43 +70,53 @@ app.post('/add', async (req, res) => {
 
 app.get('/log', async (req, res) => {
   try {
-    console.log(req.query);
+    // console.log(req.query);
     await connectDb();
-    const user = await ExerciseLog.aggregate([
-        { $match: { _id: mongoose.Types.ObjectId(req.query.userId) } },
-        // { $project: {
-        //   username: '$username',
-        //   log: {$filter: {
-        //     input: '$log',
-        //     as: 'exrs',
-        //     cond: { $gt: ['$$exrs.duration', 5]}
-        //   }},
-        // }},
-        { $addFields: {
-          count: { $size: '$log'},
+
+    const dateFrom = new Date(req.query.from);
+    const conditionFrom = !isNaN(dateFrom) ? 
+      { $gte: ['$$exrs.date', dateFrom] } :
+      {};
+    const from = !isNaN(dateFrom) ?
+      { from: dateFrom.toDateString() } :
+      {}  
+    const dateTo = new Date(req.query.to);
+    const conditionTo = !isNaN(dateTo) ? 
+      { $lte: ['$$exrs.date', dateTo] } :
+      {};
+    const to = !isNaN(dateTo) ?
+      { to: dateTo.toDateString() } :
+      {}  
+    const condition = !isNaN(dateFrom) && !isNaN(dateTo) ?
+      { $and: [conditionFrom, conditionTo] } :
+      {...conditionFrom, ...conditionTo };
+
+    const limit = parseInt(req.query.limit);
+
+    const user = await ExerciseLog.findById(req.query.userId,
+        {
           username: '$username',
-          // log: { $map: {
-          //   input: '$log',
-          //   as: 'exrs',
-          //   in: { 
-          //     description: '$$exrs.description',
-          //     duration: '$$exrs.duration',
-          //     date: {$function: {
-          //       body: function(d) {
-          //         return new Date(d).toUTCString();
-          //       }, 
-          //       args: ['$$exrs.date'],
-          //       lang: 'js'
-          //     }}  
-          //   }
-          // }}
-          }}
-      ]);
-    // res.json(user);
+          log: { $slice: [
+            {$filter: {
+              input: '$log',
+              as: 'exrs',
+              cond: condition
+            }}, 
+            !isNaN(limit) && limit > 0 ?
+              limit :
+              { $size: '$log' }
+          ]}
+        });
+
     res.json({
-      ...user[0],
-      log: user[0].log.map(exrs => ({
-        ...exrs,
+      _id: user._id,
+      username: user.username,
+      count: user.log.length,
+      ...from,
+      ...to,
+      log: user.log.map(exrs => ({
+        description: exrs.description,
+        duration: exrs.duration,
         date: exrs.date.toDateString(),
       })),
     })
